@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=musicdb
+    volumes:
+      - mongo_data:/data/db
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://user:password@mongodb:27017/musicdb
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo_data:
