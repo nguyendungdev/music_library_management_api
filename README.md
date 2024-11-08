@@ -19,13 +19,13 @@ This project is a Music API built with NestJS, MongoDB, and MinIO. It allows use
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/music-api.git
-cd music-api
+git clone https://github.com/nguyendungdev/music_library_management_api.git
+cd music_library_management_api
 ```
 
 ### Environment Variables
 
-Create a `.env` file in the root directory and add the following environment variables:
+Create a `development.env` file in the config directory and add the following environment variables:
 
 ```
 MONGODB_URI=mongodb://user:password@mongodb:27017/musicdb
