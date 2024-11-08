@@ -1,4 +1,3 @@
-// src/configs/multer.config.ts
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import * as multer from 'multer';
 import * as path from 'path';
