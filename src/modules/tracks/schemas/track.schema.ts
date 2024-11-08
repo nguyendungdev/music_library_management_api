@@ -24,6 +24,12 @@ export class Track extends Document {
 
     @Prop()
     mp3File: string;
+
+    @Prop({ type: Date, default: Date.now })
+    updatedAt: Date;
+
+    @Prop({ type: Date }) //, default: Date.now 
+    createdAt: Date;
 }
 
 export const TrackSchema = SchemaFactory.createForClass(Track);

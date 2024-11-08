@@ -12,7 +12,13 @@ export class Playlist extends Document {
     albumCover: string;
 
     @Prop({ type: [{ type: Types.ObjectId, ref: 'Track' }] })
-    tracks: Track[];
+    tracks: Types.ObjectId[];
+
+    @Prop({ type: Date, default: Date.now })
+    updatedAt: Date;
+
+    @Prop({ type: Date, default: Date.now })
+    createdAt: Date;
 }
 
 export const PlaylistSchema = SchemaFactory.createForClass(Playlist);

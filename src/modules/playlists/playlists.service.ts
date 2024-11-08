@@ -1,43 +1,47 @@
-// src/services/playlists.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+// src/playlists.service.ts
+import { Injectable } from '@nestjs/common';
+import { PlaylistRepository } from './playlists.repository';
 import { Playlist } from './schemas/playlist.schema';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
+import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { FileUploadService } from '../file-upload/file-upload.service';
 
 @Injectable()
 export class PlaylistsService {
-    constructor(@InjectModel(Playlist.name) private playlistModel: Model<Playlist>) { }
+    constructor(
+        private playlistRepository: PlaylistRepository,
+        private fileUploadService: FileUploadService,
+    ) { }
 
-    async create(createPlaylistDto: CreatePlaylistDto): Promise<Playlist> {
-        const createdPlaylist = new this.playlistModel(createPlaylistDto);
-        return createdPlaylist.save();
+    async create(data: CreatePlaylistDto, file?: Express.Multer.File): Promise<Playlist> {
+        if (file) {
+            const fileUrl = await this.fileUploadService.uploadFile(file.path, file.filename);
+            data.albumCover = fileUrl;
+        }
+        return this.playlistRepository.create(data);
     }
 
     async findAll(): Promise<Playlist[]> {
-        return this.playlistModel.find().populate('tracks').exec();
+        return this.playlistRepository.findAll();
     }
 
-    async findOne(id: string): Promise<Playlist> {
-        const playlist = await this.playlistModel.findById(id).populate('tracks').exec();
-        if (!playlist) {
-            throw new NotFoundException(`Playlist with ID ${id} not found`);
-        }
-        return playlist;
+    async findById(id: string): Promise<Playlist> {
+        return this.playlistRepository.findById(id);
     }
 
-    async update(id: string, updatePlaylistDto: CreatePlaylistDto): Promise<Playlist> {
-        const updatedPlaylist = await this.playlistModel.findByIdAndUpdate(id, updatePlaylistDto, { new: true }).exec();
-        if (!updatedPlaylist) {
-            throw new NotFoundException(`Playlist with ID ${id} not found`);
+    async update(id: string, data: UpdatePlaylistDto, file?: Express.Multer.File): Promise<Playlist> {
+        if (file) {
+            const fileUrl = await this.fileUploadService.uploadFile(file.path, file.filename);
+            data.albumCover = fileUrl;
         }
-        return updatedPlaylist;
+        return this.playlistRepository.update(id, data);
     }
 
-    async remove(id: string): Promise<void> {
-        const result = await this.playlistModel.findByIdAndDelete(id).exec();
-        if (!result) {
-            throw new NotFoundException(`Playlist with ID ${id} not found`);
-        }
+    async delete(id: string): Promise<Playlist> {
+        return this.playlistRepository.delete(id);
+    }
+
+    async addTrackToPlaylist(playlistId: string, trackId: string): Promise<Playlist> {
+        return this.playlistRepository.addTrackToPlaylist(playlistId, trackId);
     }
 }

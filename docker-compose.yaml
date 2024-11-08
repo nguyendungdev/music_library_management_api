@@ -12,6 +12,18 @@ services:
       - mongo_data:/data/db
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
   app:
     build:
       context: .
@@ -20,8 +32,18 @@ services:
       - "3000:3000"
     environment:
       - MONGODB_URI=mongodb://user:password@mongodb:27017/musicdb
+      - APP_PORT=3000
+      - API_PREFIX=api/v1
+      - APP_NAME=Music API
+      - MINIO_ENDPOINT=localhost
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=music-library
+      - MINIO_PORT=9000
     depends_on:
       - mongodb
+      - minio
 
 volumes:
   mongo_data:
+  minio_data:

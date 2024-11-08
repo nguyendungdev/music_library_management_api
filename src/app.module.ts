@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { databaseConfig } from './configs/configs.constant';
 import { TracksModule } from './modules/tracks/tracks.module';
 import { PlaylistsModule } from './modules/playlists/playlists.module';
+import { FileUploadModule } from './modules/file-upload/file-upload.module';
 
 console.log(databaseConfig.uri)
 @Module({
@@ -10,6 +11,7 @@ console.log(databaseConfig.uri)
     MongooseModule.forRoot(databaseConfig.uri),
     TracksModule,
     PlaylistsModule,
+    FileUploadModule,
   ],
 })
 export class AppModule { }

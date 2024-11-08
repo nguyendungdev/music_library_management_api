@@ -1,4 +1,5 @@
 import { config } from 'dotenv';
+import { access } from 'fs';
 if (process.env.NODE_ENV === 'production') {
     config({ path: (process.cwd(), 'config/production.env') });
 } else {
@@ -14,3 +15,11 @@ export const appConfig = {
     backendDomain: process.env.BACKEND_DOMAIN,
     name: process.env.APP_NAME,
 };
+
+export const minioConfig = {
+    accessKey: process.env.MINIO_ACCESS_KEY,
+    secretKey: process.env.MINIO_SECRET_KEY,
+    bucket: process.env.MINIO_BUCKET,
+    port: process.env.MINIO_PORT,
+    endPoint: process.env.MINIO_ENDPOINT
+}

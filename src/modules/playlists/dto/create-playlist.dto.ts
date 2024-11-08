@@ -1,16 +1,23 @@
-// src/dtos/create-playlist.dto.ts
+import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, IsArray, IsMongoId } from 'class-validator';
 
 export class CreatePlaylistDto {
+
+    @ApiProperty({
+        type: 'string',
+    })
     @IsString()
     title: string;
 
+    @ApiProperty({
+        type: 'string',
+        format: 'binary',
+        required: false,
+    })
     @IsOptional()
-    @IsString()
     albumCover?: string;
 
+    @ApiProperty({ type: [String] })
     @IsOptional()
-    @IsArray()
-    @IsMongoId({ each: true })
     tracks?: string[];
 }
