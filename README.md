@@ -57,7 +57,7 @@ This will start the following services:
 
 The Music API will be available at `http://localhost:3000`.
 ### API Documentation
-The API documentation is available at http://localhost:3000/api/v1 using Swagger
+The API documentation is available at `http://localhost:3000/api/v1` using Swagger
 ## API Endpoints
 
 ### Tracks
