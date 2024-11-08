@@ -1,31 +1,29 @@
-import { Controller, Get, Query } from '@nestjs/common';
+// src/search.controller.ts
+import { Controller, Get, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiOperation, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { SearchService } from './search.service';
-import { ApiOperation, ApiOkResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
-import { CommonDescription } from 'src/common/constants/descriptions.constants';
-import { ErrorResponse } from 'src/common/dto/response.dto';
+import { Track } from '../tracks/schemas/track.schema';
+import { Playlist } from '../playlists/schemas/playlist.schema';
 
 @Controller('search')
 export class SearchController {
     constructor(private readonly searchService: SearchService) { }
 
     @Get()
+    @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Search for tracks and playlists' })
+    @ApiQuery({ name: 'query', required: true, type: String })
     @ApiOkResponse({
-        description: CommonDescription.UPDATE_ITEM_SUCESS,
+        description: 'Search results',
+        schema: {
+            type: 'object',
+            properties: {
+                tracks: { type: 'array', items: { $ref: '#/components/schemas/Track' } },
+                playlists: { type: 'array', items: { $ref: '#/components/schemas/Playlist' } },
+            },
+        },
     })
-    @ApiBadRequestResponse({
-        description: CommonDescription.BAD_REQUEST,
-        type: ErrorResponse,
-    })
-    @ApiInternalServerErrorResponse({
-        description: CommonDescription.INTERNAL_SERVER_ERROR,
-        type: ErrorResponse,
-    })
-    async search(@Query('query') query: string) {
-        try {
-            return await this.searchService.search(query);
-        } catch (error) {
-            throw new Error('Failed to search: ' + error.message);
-        }
+    async search(@Query('query') query: string): Promise<{ tracks: Track[]; playlists: Playlist[] }> {
+        return this.searchService.search(query);
     }
 }

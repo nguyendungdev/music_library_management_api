@@ -4,6 +4,7 @@ import { databaseConfig } from './configs/configs.constant';
 import { TracksModule } from './modules/tracks/tracks.module';
 import { PlaylistsModule } from './modules/playlists/playlists.module';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
+import { SearchModule } from './modules/search/search.module';
 
 console.log(databaseConfig.uri)
 @Module({
@@ -12,6 +13,7 @@ console.log(databaseConfig.uri)
     TracksModule,
     PlaylistsModule,
     FileUploadModule,
+    SearchModule
   ],
 })
 export class AppModule { }
