@@ -1,4 +1,3 @@
-// src/controllers/tracks.controller.ts
 import { Controller, Get, Post, Body, Param, Put, Delete, UploadedFile, UseInterceptors, HttpCode, HttpStatus, BadRequestException, Res, Query, NotFoundException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TracksService } from './tracks.service';
