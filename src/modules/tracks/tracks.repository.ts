@@ -2,7 +2,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Track } from "./schemas/track.schema";
 import { Model, Schema as MongooseSchema } from "mongoose";
 import { CreateTrackDto } from "./dtos/create-track.dto";
-import { ConflictException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { UpdateTrackDto } from "./dtos/update-track.dto";
 import { GetQueryDto } from "src/common/dto/getQueryDto";
 

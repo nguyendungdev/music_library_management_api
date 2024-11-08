@@ -1,9 +1,8 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema as MongooseSchema } from 'mongoose';
 import { Track } from './schemas/track.schema';
 import { CreateTrackDto } from './dtos/create-track.dto';
-import * as path from 'path';
 import * as gad from "get-audio-duration"
 import { TrackRepository } from './tracks.repository';
 import { GetQueryDto } from 'src/common/dto/getQueryDto';
