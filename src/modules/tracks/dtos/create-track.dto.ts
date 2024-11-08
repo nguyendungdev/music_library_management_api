@@ -1,10 +1,7 @@
-// src/dtos/create-track.dto.ts
 import { Transform } from 'class-transformer';
 import { IsString, IsOptional, IsInt, Min, Max } from 'class-validator';
 
 export class CreateTrackDto {
-
-
     @IsString()
     title: string;
 
@@ -31,5 +28,4 @@ export class CreateTrackDto {
     mp3File?: string;
 
     id?: string;
-
 }

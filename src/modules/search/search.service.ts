@@ -13,6 +13,14 @@ export class SearchService {
 
     async search(query: string): Promise<{ tracks: Track[]; playlists: Playlist[] }> {
         const tracks = await this.trackModel.find({
+            $text: { $search: query }
+        }).exec();
+
+        const playlists = await this.playlistModel.find({
+            $text: { $search: query }
+        }).populate('tracks').exec();
+
+        const fuzzyTracks = await this.trackModel.find({
             $or: [
                 { title: { $regex: query, $options: 'i' } },
                 { artist: { $regex: query, $options: 'i' } },
@@ -21,7 +29,7 @@ export class SearchService {
             ],
         }).exec();
 
-        const playlists = await this.playlistModel.find({
+        const fuzzyPlaylists = await this.playlistModel.find({
             $or: [
                 { title: { $regex: query, $options: 'i' } },
                 { 'tracks.title': { $regex: query, $options: 'i' } },
@@ -31,6 +39,9 @@ export class SearchService {
             ],
         }).populate('tracks').exec();
 
-        return { tracks, playlists };
+        const combinedTracks = [...new Set([...tracks, ...fuzzyTracks])];
+        const combinedPlaylists = [...new Set([...playlists, ...fuzzyPlaylists])];
+
+        return { tracks: combinedTracks, playlists: combinedPlaylists };
     }
 }

@@ -4,7 +4,7 @@ import { ApiConsumes, ApiBody, ApiOperation, ApiOkResponse, ApiNotFoundResponse 
 import { PlaylistsService } from './playlists.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
-import { multerConfig } from 'src/configs/multer.config';
+import { imageMulterConfig, multerConfig } from 'src/configs/multer.config';
 
 @Controller('playlists')
 export class PlaylistsController {
@@ -12,7 +12,7 @@ export class PlaylistsController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    @UseInterceptors(FileInterceptor('album_cover', multerConfig))
+    @UseInterceptors(FileInterceptor('album_cover', imageMulterConfig))
     @ApiConsumes('multipart/form-data')
     @ApiBody({
         schema: {
@@ -69,7 +69,7 @@ export class PlaylistsController {
 
     @Put(':id')
     @HttpCode(HttpStatus.OK)
-    @UseInterceptors(FileInterceptor('albumCover', multerConfig))
+    @UseInterceptors(FileInterceptor('albumCover', imageMulterConfig))
     @ApiConsumes('multipart/form-data')
     @ApiBody({
         schema: {

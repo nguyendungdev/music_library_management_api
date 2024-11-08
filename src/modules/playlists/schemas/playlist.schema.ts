@@ -22,3 +22,4 @@ export class Playlist extends Document {
 }
 
 export const PlaylistSchema = SchemaFactory.createForClass(Playlist);
+PlaylistSchema.index({ title: 'text' });

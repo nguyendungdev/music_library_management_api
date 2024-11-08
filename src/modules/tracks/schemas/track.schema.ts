@@ -33,3 +33,4 @@ export class Track extends Document {
 }
 
 export const TrackSchema = SchemaFactory.createForClass(Track);
+TrackSchema.index({ title: 'text', artist: 'text', album: 'text', genre: 'text' });

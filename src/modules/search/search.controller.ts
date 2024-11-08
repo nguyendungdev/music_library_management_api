@@ -1,4 +1,3 @@
-// src/search.controller.ts
 import { Controller, Get, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { SearchService } from './search.service';
