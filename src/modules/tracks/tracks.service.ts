@@ -18,7 +18,7 @@ export class TracksService {
 
     ) { }
 
-    async create(createTrackDto: CreateTrackDto, file: Express.Multer.File): Promise<Track> {
+    async create(createTrackDto: CreateTrackDto, file?: Express.Multer.File): Promise<Track> {
         if (file) {
             const fileUrl = await this.fileUploadService.uploadFile(file.path, file.filename);
             const duration = await this.getAudioDuration(file.path);
