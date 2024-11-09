@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Param, Body, HttpCode, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Param, Body, HttpCode, HttpStatus, UseInterceptors, UploadedFile, ParseFilePipe, FileTypeValidator } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiBody, ApiOperation, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { PlaylistsService } from './playlists.service';
@@ -12,22 +12,23 @@ export class PlaylistsController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    @UseInterceptors(FileInterceptor('album_cover', multerConfig))
+    @UseInterceptors(FileInterceptor('albumCover', multerConfig))
     @ApiConsumes('multipart/form-data')
     @ApiBody({
         schema: {
             type: 'object',
             properties: {
-                title: { type: 'string', description: 'Title of the playlist' },
-                album_cover: {
+                title: { type: 'string', description: 'Title of the playlist', example: 'Sample Playlist' },
+                albumCover: {
                     type: 'string',
                     format: 'binary',
-                    description: 'Album cover image to upload',
+                    description: 'Album cover image file (only image files are allowed)',
                 },
                 tracks: {
                     type: 'array',
                     items: { type: 'string' },
                     description: 'Array of track IDs',
+                    example: ['trackId1', 'trackId2'],
                 },
             },
         },
@@ -38,7 +39,13 @@ export class PlaylistsController {
     })
     async createPlaylist(
         @Body() createPlaylistDto: CreatePlaylistDto,
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new FileTypeValidator({ fileType: /image\/(jpeg|png|gif)/ }),
+                ],
+            }),
+        ) file: Express.Multer.File,
     ) {
         return this.playlistsService.create(createPlaylistDto, file);
     }
@@ -75,16 +82,17 @@ export class PlaylistsController {
         schema: {
             type: 'object',
             properties: {
-                title: { type: 'string', description: 'Title of the playlist' },
+                title: { type: 'string', description: 'Title of the playlist', example: 'Sample Playlist' },
                 albumCover: {
                     type: 'string',
                     format: 'binary',
-                    description: 'Album cover image to upload',
+                    description: 'Album cover image file (only image files are allowed)',
                 },
                 tracks: {
                     type: 'array',
                     items: { type: 'string' },
                     description: 'Array of track IDs',
+                    example: ['trackId1', 'trackId2'],
                 },
             },
         },
@@ -99,7 +107,13 @@ export class PlaylistsController {
     async updatePlaylist(
         @Param('id') id: string,
         @Body() updatePlaylistDto: UpdatePlaylistDto,
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new FileTypeValidator({ fileType: /image\/(jpeg|png|gif)/ }),
+                ],
+            }),
+        ) file: Express.Multer.File,
     ) {
         if (file) {
             updatePlaylistDto.albumCover = file.path;

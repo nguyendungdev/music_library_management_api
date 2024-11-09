@@ -3,17 +3,21 @@ import { IsString, IsOptional, IsInt, Min, Max } from 'class-validator';
 
 export class CreateTrackDto {
     @IsString()
+    @Transform(({ value }) => value.toString(), { toClassOnly: true })
     title: string;
 
     @IsString()
+    @Transform(({ value }) => value.toString(), { toClassOnly: true })
     artist: string;
 
     @IsOptional()
     @IsString()
+    @Transform(({ value }) => value.toString(), { toClassOnly: true })
     album?: string;
 
     @IsOptional()
     @IsString()
+    @Transform(({ value }) => value.toString(), { toClassOnly: true })
     genre?: string;
 
     @IsOptional()

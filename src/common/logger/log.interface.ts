@@ -1,4 +1,5 @@
 import { HttpException } from '@nestjs/common';
+import { MulterError } from 'multer';
 
 export interface ILog {
   endpoint: string;
@@ -6,5 +7,5 @@ export interface ILog {
   ipAddress: string;
   message?: string;
   data?: object;
-  error?: HttpException;
+  error?: HttpException | MulterError;
 }

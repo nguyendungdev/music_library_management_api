@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UploadedFile, UseInterceptors, HttpCode, HttpStatus, Query, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UploadedFile, UseInterceptors, HttpCode, HttpStatus, Query, NotFoundException, FileTypeValidator, ParseFilePipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dtos/create-track.dto';
@@ -25,11 +25,11 @@ export class TracksController {
         schema: {
             type: 'object',
             properties: {
-                title: { type: 'string', description: 'Title of the track' },
-                artist: { type: 'string', description: 'Artist of the track' },
-                album: { type: 'string', description: 'Album name of the track' },
-                genre: { type: 'string', description: 'Genre of the track' },
-                releaseYear: { type: 'number', description: 'Release year of the track' },
+                title: { type: 'string', description: 'Title of the track', example: 'Sample Title' },
+                artist: { type: 'string', description: 'Artist of the track', example: 'Sample Artist' },
+                album: { type: 'string', description: 'Album name of the track', example: 'Sample Album' },
+                genre: { type: 'string', description: 'Genre of the track', example: 'Sample Genre' },
+                releaseYear: { type: 'number', description: 'Release year of the track', example: 2021 },
                 mp3File: {
                     type: 'string',
                     format: 'binary',
@@ -54,7 +54,12 @@ export class TracksController {
         description: CommonDescription.INTERNAL_SERVER_ERROR,
         type: ErrorResponse,
     })
-    async create(@UploadedFile() file: Express.Multer.File, @Body() createTrackDto: CreateTrackDto) {
+    async create(@UploadedFile(
+        new ParseFilePipe({
+            validators: [
+                new FileTypeValidator({ fileType: 'audio/mpeg' }),
+            ],
+        }),) file: Express.Multer.File, @Body() createTrackDto: CreateTrackDto) {
         return this.tracksService.create(createTrackDto, file);
 
     }
@@ -81,11 +86,11 @@ export class TracksController {
         schema: {
             type: 'object',
             properties: {
-                title: { type: 'string', description: 'Title of the track' },
-                artist: { type: 'string', description: 'Artist of the track' },
-                album: { type: 'string', description: 'Album name of the track' },
-                genre: { type: 'string', description: 'Genre of the track' },
-                releaseYear: { type: 'number', description: 'Release year of the track' },
+                title: { type: 'string', description: 'Title of the track', example: 'Sample Title' },
+                artist: { type: 'string', description: 'Artist of the track', example: 'Sample Artist' },
+                album: { type: 'string', description: 'Album name of the track', example: 'Sample Album' },
+                genre: { type: 'string', description: 'Genre of the track', example: 'Sample Genre' },
+                releaseYear: { type: 'number', description: 'Release year of the track', example: 2021 },
                 mp3File: {
                     type: 'string',
                     format: 'binary',
@@ -104,7 +109,13 @@ export class TracksController {
     async updateTrack(
         @Param('id') id: string,
         @Body() updateTrackDto: UpdateTrackDto,
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new FileTypeValidator({ fileType: 'audio/mpeg' }),
+                ],
+            }),
+        ) file: Express.Multer.File,
     ) {
         const track = await this.tracksService.update(id, updateTrackDto, file);
         if (!track) {
