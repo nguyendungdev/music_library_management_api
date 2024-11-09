@@ -24,7 +24,7 @@ export class FileUploadService {
             await this.minioClient.makeBucket(bucketName, 'us-east-1');
         }
         await this.minioClient.fPutObject(bucketName, fileName, filePath);
-        const fileUrl = `${minioConfig.endPoint}/${bucketName}/${fileName}`;
+        const fileUrl = `${minioConfig.endPoint}:${minioConfig.port}/${bucketName}/${fileName}`;
         return fileUrl;
     }
 }
